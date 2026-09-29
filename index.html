@@ -1,49 +1,603 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
+    <head>
+        <meta charset="utf-8" />
 
-  <title>Cocos Creator | CocosEdu373</title>
+        <title>Cocos Creator | CocosEdu373</title>
 
-  <!--http://www.html5rocks.com/en/mobile/mobifying/-->
-  <meta name="viewport"
-        content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1,minimal-ui=true"/>
+        <!--http://www.html5rocks.com/en/mobile/mobifying/-->
+        <meta
+            name="viewport"
+            content="width=device-width,user-scalable=no,initial-scale=1, minimum-scale=1,maximum-scale=1"
+        />
 
-  <!--https://developer.apple.com/library/safari/documentation/AppleApplications/Reference/SafariHTMLRef/Articles/MetaTags.html-->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="format-detection" content="telephone=no">
+        <!--https://developer.apple.com/library/safari/documentation/AppleApplications/Reference/SafariHTMLRef/Articles/MetaTags.html-->
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta
+            name="apple-mobile-web-app-status-bar-style"
+            content="black-translucent"
+        />
+        <meta name="format-detection" content="telephone=no" />
 
-  <!-- force webkit on 360 -->
-  <meta name="renderer" content="webkit"/>
-  <meta name="force-rendering" content="webkit"/>
-  <!-- force edge on IE -->
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-  <meta name="msapplication-tap-highlight" content="no">
+        <!-- force webkit on 360 -->
+        <meta name="renderer" content="webkit" />
+        <meta name="force-rendering" content="webkit" />
+        <!-- force edge on IE -->
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <meta name="msapplication-tap-highlight" content="no" />
 
-  <!-- force full screen on some browser -->
-  <meta name="full-screen" content="yes"/>
-  <meta name="x5-fullscreen" content="true"/>
-  <meta name="360-fullscreen" content="true"/>
+        <!-- force full screen on some browser -->
+        <meta name="full-screen" content="yes" />
+        <meta name="x5-fullscreen" content="true" />
+        <meta name="360-fullscreen" content="true" />
 
-  <!--fix fireball/issues/3568 -->
-  <!--<meta name="browsermode" content="application">-->
-  <meta name="x5-page-mode" content="app">
+        <!-- force screen orientation on some browser -->
+        <meta name="screen-orientation" content="portrait" />
+        <meta name="x5-orientation" content="portrait" />
 
-  <!--<link rel="apple-touch-icon" href=".png" />-->
-  <!--<link rel="apple-touch-icon-precomposed" href=".png" />-->
+        <!--fix fireball/issues/3568 -->
+        <!--<meta name="browsermode" content="application">-->
+        <meta name="x5-page-mode" content="app" />
 
-  <link rel="stylesheet" type="text/css" href="style.css"/>
+        <!--<link rel="apple-touch-icon" href=".png" />-->
+        <!--<link rel="apple-touch-icon-precomposed" href=".png" />-->
 
-</head>
-<body>
-  <div id="GameDiv" cc_exact_fit_screen="true">
-      <div id="Cocos3dGameContainer">
-        <canvas id="GameCanvas" oncontextmenu="event.preventDefault()" tabindex="99"></canvas>
-      </div>
-    </div>
-  
+        //<link rel="stylesheet" type="text/css" href="style.css" />
+
+        <!-- Google tag (gtag.js) -->
+        <script
+            async
+            src="https://www.googletagmanager.com/gtag/js?id=G-90TVNXYLEN"
+        ></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag('js', new Date());
+
+            gtag('config', 'G-90TVNXYLEN');
+        </script>
+    </head>
+    <body>
+        <canvas
+            id="GameCanvas"
+            oncontextmenu="event.preventDefault()"
+            tabindex="0"
+        ></canvas>
+        <div
+            id="version-text"
+            style="
+                position: fixed;
+                top: 10px;
+                right: 10px;
+                color: white;
+                font-family: Arial, sans-serif;
+                font-size: 14px;
+                z-index: 99998;
+                pointer-events: none;
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            "
+        >
+            v0.5.0
+        </div>
+        <div
+            id="debug-trigger"
+            style="
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 5%;
+                height: 5%;
+                z-index: 99999;
+                opacity: 0;
+                cursor: pointer;
+            "
+        ></div>
+        <div
+            id="api-loading"
+            style="
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                z-index: 9999;
+                justify-content: center;
+                align-items: center;
+                color: white;
+                font-size: 18px;
+                pointer-events: all;
+            "
+        >
+            <div class="bouncing-ball"></div>
+            <div class="ball-shadow"></div>
+        </div>
+
+        <div
+            id="game-loading"
+            style="
+                display: flex;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: url('loading-background.jpg');
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                z-index: 10000;
+                color: white;
+                font-family: Arial, sans-serif;
+                pointer-events: all;
+            "
+        >
+            <div class="loading-content">
+                <div class="loading-bar-container">
+                    <div class="loading-bar-background">
+                        <div class="loading-bar-fill" id="loadingBarFill"></div>
+                    </div>
+                    <div class="loading-text" id="loadingText">
+                        Loading... 0%
+                    </div>
+                </div>
+            </div>
+        </div>
+        <style>
+            .bouncing-ball {
+                width: 80px;
+                height: 80px;
+                background-image: url('ball_5.png');
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-position: center;
+                animation: bounceBall 1.2s infinite ease-in-out;
+                position: relative;
+                z-index: 2;
+            }
+
+            .loading-content {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 40px;
+                position: absolute;
+                top: 80%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+
+            .game-loading-ball {
+                width: 80px;
+                height: 80px;
+                background-image: url('ball_5.png');
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-position: center;
+                animation: gameBounceBall 1.2s infinite ease-in-out;
+                position: relative;
+                z-index: 2;
+            }
+
+            .game-ball-shadow {
+                position: absolute;
+                top: calc(50% + 20px);
+                left: 50%;
+                width: 100px;
+                height: 20px;
+                background: rgba(0, 0, 0, 0.3);
+                border-radius: 50%;
+                transform: translateX(-50%);
+                animation: gameShadowBounce 1.2s infinite ease-in-out;
+                z-index: 1;
+            }
+
+            .loading-bar-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+
+            .loading-bar-background {
+                width: 291px;
+                height: 28px;
+                background: url('loading-bar-bg.png');
+                background-size: 100% 100%;
+                background-repeat: no-repeat;
+                background-position: center;
+                overflow: hidden;
+                position: relative;
+            }
+
+            .loading-bar-fill {
+                height: 19px;
+                width: 281px;
+                background: url('loading-bar-fill.png');
+                background-size: 100% 100%;
+                background-repeat: no-repeat;
+                background-position: center;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                -webkit-mask: linear-gradient(
+                    to right,
+                    black 0%,
+                    black 0%,
+                    transparent 0%
+                );
+                mask: linear-gradient(
+                    to right,
+                    black 0%,
+                    black 0%,
+                    transparent 0%
+                );
+                transition: -webkit-mask 0.3s ease, mask 0.3s ease;
+            }
+
+            .loading-text {
+                font-size: 16px;
+                color: rgba(255, 255, 255, 0.8);
+                font-weight: 300;
+                letter-spacing: 1px;
+            }
+
+            @keyframes gameBounceBall {
+                0%,
+                100% {
+                    transform: translateY(0) scaleY(0.7) scaleX(1.2);
+                    animation-timing-function: ease-in;
+                }
+                5% {
+                    transform: translateY(-20px) scaleY(1) scaleX(1);
+                    animation-timing-function: ease-in;
+                }
+                10% {
+                    transform: translateY(-100px) scaleY(1.2) scaleX(0.8);
+                    animation-timing-function: ease-in;
+                }
+                30% {
+                    transform: translateY(-200px) scaleY(1) scaleX(1);
+                    animation-timing-function: ease-in;
+                }
+                70% {
+                    transform: translateY(-180px) scaleY(1.05) scaleX(0.95);
+                    animation-timing-function: ease-in;
+                }
+                90% {
+                    transform: translateY(-100px) scaleY(1.2) scaleX(0.8);
+                    animation-timing-function: ease-in;
+                }
+                95% {
+                    transform: translateY(0px) scaleY(1) scaleX(1);
+                    animation-timing-function: ease-in;
+                }
+                100% {
+                    transform: translateY(0) scaleY(0.7) scaleX(1.2);
+                    animation-timing-function: ease-in;
+                }
+            }
+
+            @keyframes gameShadowBounce {
+                0%,
+                100% {
+                    transform: translateX(-50%) scaleX(1.2);
+                    opacity: 0.8;
+                }
+                5% {
+                    transform: translateX(-50%) scaleX(1);
+                    opacity: 0.7;
+                }
+                10% {
+                    transform: translateX(-50%) scaleX(0.8);
+                    opacity: 0.5;
+                }
+                30% {
+                    transform: translateX(-50%) scaleX(1);
+                    opacity: 0.3;
+                }
+                70% {
+                    transform: translateX(-50%) scaleX(0.95);
+                    opacity: 0.35;
+                }
+                90% {
+                    transform: translateX(-50%) scaleX(0.8);
+                    opacity: 0.5;
+                }
+                95% {
+                    transform: translateX(-50%) scaleX(1);
+                    opacity: 0.7;
+                }
+            }
+
+            .ball-shadow {
+                position: absolute;
+                top: calc(50% + 20px);
+                left: 50%;
+                width: 100px;
+                height: 20px;
+                background: rgba(0, 0, 0, 0.3);
+                border-radius: 50%;
+                transform: translateX(-50%);
+                animation: shadowBounce 1.2s infinite ease-in-out;
+                z-index: 1;
+            }
+
+            @keyframes bounceBall {
+                0%,
+                100% {
+                    transform: translateY(0) scaleY(0.7) scaleX(1.2);
+                    animation-timing-function: ease-in;
+                }
+                5% {
+                    transform: translateY(-20px) scaleY(1) scaleX(1);
+                    animation-timing-function: ease-in;
+                }
+                10% {
+                    transform: translateY(-100px) scaleY(1.2) scaleX(0.8);
+                    animation-timing-function: ease-in;
+                }
+                30% {
+                    transform: translateY(-200px) scaleY(1) scaleX(1);
+                    animation-timing-function: ease-in;
+                }
+                70% {
+                    transform: translateY(-180px) scaleY(1.05) scaleX(0.95);
+                    animation-timing-function: ease-in;
+                }
+                90% {
+                    transform: translateY(-100px) scaleY(1.2) scaleX(0.8);
+                    animation-timing-function: ease-in;
+                }
+                95% {
+                    transform: translateY(0px) scaleY(1) scaleX(1);
+                    animation-timing-function: ease-in;
+                }
+                100% {
+                    transform: translateY(0) scaleY(0.7) scaleX(1.2);
+                    animation-timing-function: ease-in;
+                }
+            }
+
+            @keyframes shadowBounce {
+                0%,
+                100% {
+                    transform: translateX(-50%) scaleX(1.2);
+                    opacity: 0.8;
+                }
+                5% {
+                    transform: translateX(-50%) scaleX(1);
+                    opacity: 0.7;
+                }
+                10% {
+                    transform: translateX(-50%) scaleX(0.8);
+                    opacity: 0.5;
+                }
+                30% {
+                    transform: translateX(-50%) scaleX(1);
+                    opacity: 0.3;
+                }
+                70% {
+                    transform: translateX(-50%) scaleX(0.95);
+                    opacity: 0.35;
+                }
+                90% {
+                    transform: translateX(-50%) scaleX(0.8);
+                    opacity: 0.5;
+                }
+                95% {
+                    transform: translateX(-50%) scaleX(1);
+                    opacity: 0.7;
+                }
+            }
+        </style>
+
+        <script>
+            // Game loading functionality
+            (function () {
+                const gameLoadingScreen =
+                    document.getElementById('game-loading');
+                const loadingBarFill =
+                    document.getElementById('loadingBarFill');
+                const loadingText = document.getElementById('loadingText');
+
+                let currentProgress = 0;
+                let targetProgress = 0;
+                let isGameLoaded = false;
+                let progressInterval;
+
+                function updateProgressBar() {
+                    if (Math.abs(targetProgress - currentProgress) > 0.01) {
+                        currentProgress +=
+                            (targetProgress - currentProgress) * 0.05;
+                        const percentage = Math.round(currentProgress * 100);
+
+                        loadingBarFill.style.webkitMask = `linear-gradient(to right, black 0%, black ${percentage}%, transparent ${percentage}%)`;
+                        loadingBarFill.style.mask = `linear-gradient(to right, black 0%, black ${percentage}%, transparent ${percentage}%)`;
+                        loadingText.textContent = `Loading... ${percentage}%`;
+
+                        requestAnimationFrame(updateProgressBar);
+                    }
+                }
+
+                function startFakeLoading() {
+                    // Animate progress to 90% over 3-5 seconds
+                    const duration = 3000 + Math.random() * 2000; // 3-5 seconds
+                    const startTime = Date.now();
+
+                    function animateProgress() {
+                        const elapsed = Date.now() - startTime;
+                        const progress = Math.min(elapsed / duration, 1);
+
+                        // Easing function (ease out)
+                        const eased = 1 - Math.pow(1 - progress, 3);
+                        targetProgress = eased * 0.9; // Go up to 90%
+
+                        updateProgressBar();
+
+                        if (progress < 1) {
+                            requestAnimationFrame(animateProgress);
+                        }
+                    }
+
+                    animateProgress();
+                }
+
+                // Global callback for when game finishes loading
+                window.onGameLoaded = function () {
+                    if (isGameLoaded) return; // Prevent multiple calls
+
+                    isGameLoaded = true;
+                    console.log('Game loaded, completing loading bar...');
+
+                    // Hide version text
+                    const versionText = document.getElementById('version-text');
+                    if (versionText) {
+                        versionText.style.display = 'none';
+                    }
+
+                    // Animate to 100%
+                    const startProgress = currentProgress;
+                    const startTime = Date.now();
+                    const duration = 300; // 0.3 seconds
+
+                    function completeProgress() {
+                        const elapsed = Date.now() - startTime;
+                        const progress = Math.min(elapsed / duration, 1);
+
+                        targetProgress =
+                            startProgress + (1.0 - startProgress) * progress;
+                        updateProgressBar();
+
+                        if (progress < 1) {
+                            requestAnimationFrame(completeProgress);
+                        } else {
+                            // Wait 0.5s then hide loading screen
+                            setTimeout(() => {
+                                hideGameLoading();
+                            }, 500);
+                        }
+                    }
+
+                    completeProgress();
+                };
+
+                function hideGameLoading() {
+                    gameLoadingScreen.style.transition =
+                        'opacity 0.5s ease-out';
+                    gameLoadingScreen.style.opacity = '0';
+
+                    setTimeout(() => {
+                        gameLoadingScreen.style.display = 'none';
+                    }, 500);
+                }
+
+                function showGameLoading() {
+                    gameLoadingScreen.style.display = 'flex';
+                    gameLoadingScreen.style.opacity = '1';
+                    currentProgress = 0;
+                    targetProgress = 0;
+                    isGameLoaded = false;
+
+                    // Reset progress bar
+                    loadingBarFill.style.webkitMask =
+                        'linear-gradient(to right, black 0%, black 0%, transparent 0%)';
+                    loadingBarFill.style.mask =
+                        'linear-gradient(to right, black 0%, black 0%, transparent 0%)';
+                    loadingText.textContent = 'Loading... 0%';
+
+                    // Start fake loading after a small delay
+                    setTimeout(startFakeLoading, 100);
+                }
+
+                // Initialize loading screen on page load
+                document.addEventListener('DOMContentLoaded', function () {
+                    showGameLoading();
+                });
+
+                // Expose functions globally if needed
+                window.showGameLoading = showGameLoading;
+                window.hideGameLoading = hideGameLoading;
+            })();
+        </script>
+
+        //<script src="./vconsole.min.js"></script>
+        <script type="text/javascript">
+            // VConsole setup - hidden by default
+            let vConsoleInstance = null;
+
+            // Function to open/show VConsole
+            window.openvconsole = function () {
+                if (window.VConsole && !vConsoleInstance) {
+                    vConsoleInstance = new VConsole();
+                    console.log('VConsole opened');
+                } else if (vConsoleInstance) {
+                    vConsoleInstance.show();
+                    console.log('VConsole shown');
+                }
+            };
+
+            // Function to close/hide VConsole (optional)
+            window.closevconsole = function () {
+                if (vConsoleInstance) {
+                    vConsoleInstance.hide();
+                    console.log('VConsole hidden');
+                }
+            };
+
+            // Function to destroy VConsole completely (optional)
+            window.destroyvconsole = function () {
+                if (vConsoleInstance) {
+                    vConsoleInstance.destroy();
+                    vConsoleInstance = null;
+                    console.log('VConsole destroyed');
+                }
+            };
+
+            // Debug trigger - tap 7 times to open vconsole
+            (function () {
+                const debugTrigger = document.getElementById('debug-trigger');
+                let tapCount = 0;
+                let tapTimer = null;
+
+                console.log(
+                    '[Debug Button] Initialized, element:',
+                    debugTrigger
+                );
+
+                debugTrigger.addEventListener('click', function (e) {
+                    tapCount++;
+                    console.log('[Debug Button] Tap', tapCount, 'of 7');
+
+                    if (tapTimer) {
+                        clearTimeout(tapTimer);
+                    }
+
+                    if (tapCount >= 7) {
+                        console.log(
+                            '[Debug Button] 7 taps reached! Opening vconsole...'
+                        );
+                        window.openvconsole();
+                        tapCount = 0;
+                    } else {
+                        tapTimer = setTimeout(function () {
+                            console.log(
+                                '[Debug Button] Reset tap count (timeout)'
+                            );
+                            tapCount = 0;
+                        }, 2000);
+                    }
+                });
+
+                console.log('[Debug Button] Click listener attached');
+            })();
+        </script>
+
+        
 
 <!-- Polyfills bundle. -->
 
@@ -60,5 +614,5 @@
     System.import('./index.js').catch(function(err) { console.error(err); })
 </script>
 
-</body>
+    </body>
 </html>
