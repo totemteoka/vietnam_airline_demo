@@ -12,7 +12,9 @@
         />
 
         <!--https://developer.apple.com/library/safari/documentation/AppleApplications/Reference/SafariHTMLRef/Articles/MetaTags.html-->
-        <meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		
         <meta
             name="apple-mobile-web-app-status-bar-style"
             content="black-translucent"
@@ -393,6 +395,13 @@
                     transform: translateX(-50%) scaleX(1);
                     opacity: 0.7;
                 }
+            }
+			
+			#profiler, #profiler-node, .profiler, .profiler-node {
+                display: none !important;
+                pointer-events: none !important;
+                opacity: 0 !important;
+                z-index: -9999 !important;
             }
         </style>
 
