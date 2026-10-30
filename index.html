@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8" />
 
-        <title>Cocos Creator | LotusRun</title>
+        <title>Cocos Creator | CocosEdu373</title>
 
         <!--http://www.html5rocks.com/en/mobile/mobifying/-->
         <meta
@@ -139,11 +139,12 @@
         >
             <div class="loading-content">
                 <div class="loading-bar-container">
+                    <!-- Đưa chữ Đang tải lên TRÊN progress bar -->
+                    <div class="loading-text" id="loadingText">
+                        LOADING 0%
+                    </div>
                     <div class="loading-bar-background">
                         <div class="loading-bar-fill" id="loadingBarFill"></div>
-                    </div>
-                    <div class="loading-text" id="loadingText">
-                        Loading... 0%
                     </div>
                 </div>
             </div>
@@ -165,11 +166,12 @@
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                gap: 40px;
                 position: absolute;
-                top: 80%;
+                /* Căn chỉnh theo mép dưới giống hình mẫu */
+                bottom: 5%;
                 left: 50%;
-                transform: translate(-50%, -50%);
+                transform: translateX(-50%);
+                width: 100%;
             }
 
             .game-loading-ball {
@@ -201,12 +203,12 @@
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                gap: 15px;
+                gap: 8px; /* Khoảng cách giữa chữ và thanh nạp */
             }
 
             .loading-bar-background {
-                width: 291px;
-                height: 28px;
+                width: 201px;
+                height: 20px;
                 background: url('loading-bar-bg.png');
                 background-size: 100% 100%;
                 background-repeat: no-repeat;
@@ -216,8 +218,8 @@
             }
 
             .loading-bar-fill {
-                height: 19px;
-                width: 281px;
+                height: 20px;
+                width: 201px;
                 background: url('loading-bar-fill.png');
                 background-size: 100% 100%;
                 background-repeat: no-repeat;
@@ -243,9 +245,10 @@
 
             .loading-text {
                 font-size: 16px;
-                color: #076b81;
-                font-weight: bold;
-                letter-spacing: 1px;
+                color: rgba(0, 83, 116, 1);
+                font-weight: 700; /* Đổi đậm chữ chút giống hình */
+                letter-spacing: 1.5px;
+                text-transform: uppercase;
             }
 
             @keyframes gameBounceBall {
@@ -427,7 +430,7 @@
 
                         loadingBarFill.style.webkitMask = `linear-gradient(to right, black 0%, black ${percentage}%, transparent ${percentage}%)`;
                         loadingBarFill.style.mask = `linear-gradient(to right, black 0%, black ${percentage}%, transparent ${percentage}%)`;
-                        loadingText.textContent = `Loading... ${percentage}%`;
+                        loadingText.textContent = `LOADING ${percentage}%`;
 
                         requestAnimationFrame(updateProgressBar);
                     }
@@ -517,7 +520,7 @@
                         'linear-gradient(to right, black 0%, black 0%, transparent 0%)';
                     loadingBarFill.style.mask =
                         'linear-gradient(to right, black 0%, black 0%, transparent 0%)';
-                    loadingText.textContent = 'Loading... 0%';
+                    loadingText.textContent = 'LOADING 0%';
 
                     // Start fake loading after a small delay
                     setTimeout(startFakeLoading, 100);
